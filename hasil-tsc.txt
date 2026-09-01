@@ -1,0 +1,7 @@
+npm notice run ts-api-lab@1.0.0 npx
+npm notice run 'tsc' --noEmit
+src/bugs.ts(9,17): error TS2339: Property 'emailAddress' does not exist on type 'User'.
+src/bugs.ts(15,12): error TS18048: 'user' is possibly 'undefined'.
+src/bugs.ts(20,12): error TS18048: 'user.profile' is possibly 'undefined'.
+src/bugs.ts(20,12): error TS18048: 'user.profile.bio' is possibly 'undefined'.
+src/bugs.ts(25,24): error TS2345: Argument of type '"refunded"' is not assignable to parameter of type 'OrderStatus'.

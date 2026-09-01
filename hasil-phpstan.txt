@@ -1,0 +1,24 @@
+Note: Using configuration file /home/hafter/Dev/riset/ts-api-lab/phpstan.neon.
+ 0/2 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0%[1G[2K 2/2 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+
+ ------ --------------------------------------------------------------------------------------- 
+  Line   bugs.php                                                                               
+ ------ --------------------------------------------------------------------------------------- 
+  12     Access to an undefined property User::$emailAddress.                                   
+         🪪  property.notFound                                                                  
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-undefined-property  
+  12     Function bug1() should return string but returns mixed.                                
+         🪪  return.type                                                                        
+  18     Cannot access property $email on User|null.                                            
+         🪪  property.nonObject                                                                 
+  23     Cannot access property $bio on Profile|null.                                           
+         🪪  property.nonObject                                                                 
+  23     Parameter #1 $string of function strlen expects string, string|null given.             
+         🪪  argument.type                                                                      
+  28     Parameter #1 $status of function statusLabel expects OrderStatus, string given.        
+         🪪  argument.type                                                                      
+ ------ --------------------------------------------------------------------------------------- 
+
+
+ [ERROR] Found 6 errors                                                                                                 
+
