@@ -1,38 +1,40 @@
-import { findUser, statusLabel, type User, type Order } from "./domain.js";
+import { findUser, statusLabel, type User } from "./domain.js";
+
+type UserId = string & { readonly __brand: "UserId" };
+type ProductId = string & { readonly __brand: "ProductId" };
 
 const users: User[] = [
-    {id: "u1", email: "coba@gmail.com", profile: {displayName: "Coba", bio: "Bubur diaduk"}},
+    { id: "u1", email: "a@example.com", profile: { displayName: "Bayu Nurdiansyah", bio: "Bubur diaduk" } },
 ];
 
-// wrong properties
+// fix 1: property yang benar
 export function bug1(user: User): string {
-    return user.emailAddress;
-}
-
-// find user without check the undefined value
-export function bug2(): string {
-    const user = findUser(users, "u099");
     return user.email;
 }
 
-// skip optional chaining "?"
+// fix 2: cek undefined sebelum akses
+export function bug2(): string {
+    const user = findUser(users, "u99");
+    return user?.email ?? "not found";
+}
+
+// fix 3: optional chaining
 export function bug3(user: User): number {
-    return user.profile.bio.length;
+    return user.profile?.bio?.length ?? 0;
 }
 
-// wrong status value
+// fix 4: value yang valid
 export function bug4(): string {
-    return statusLabel("refunded");
+    return statusLabel("pending");
 }
 
-
-export function makeOrder(userId: string, productId: string): string{
-    return `${userId}-${productId}`
+// fix 5: branded type bikin dua parameter jadi tipe beda
+export function makeOrder(userId: UserId, productId: ProductId): string {
+    return `${userId}-${productId}`;
 }
 
-// bug 5 wrong place argument 
 export function bug5(): string {
-    const userId = "u1";
-    const productId = "p1";
-    return makeOrder(productId, userId);
+    const userId = "u1" as UserId;
+    const productId = "p1" as ProductId;
+    return makeOrder(userId, productId);
 }

@@ -1,13 +1,24 @@
 <?php
+
 enum OrderStatus: string
 {
-    case Pending = 'pending';
-    case Paid = 'paid';
-    case Shipped = 'shipped';
+    case Pending   = 'pending';
+    case Paid      = 'paid';
+    case Shipped   = 'shipped';
     case Cancelled = 'cancelled';
 }
 
-class Profile 
+final class UserId
+{
+    public function __construct(public readonly string $value) {}
+}
+
+final class ProductId
+{
+    public function __construct(public readonly string $value) {}
+}
+
+class Profile
 {
     public function __construct(
         public string $displayName,
@@ -20,7 +31,7 @@ class User
     public function __construct(
         public string $id,
         public string $email,
-        public ?Profile $profile,
+        public ?Profile $profile = null,
     ) {}
 }
 
@@ -29,9 +40,9 @@ class Order
     public function __construct(
         public string $id,
         public string $userId,
-        public OrderStatus $orderStatus,
+        public OrderStatus $status,
         public float $total,
-    ){}
+    ) {}
 }
 
 /**
@@ -39,22 +50,20 @@ class Order
  */
 function findUser(array $users, string $id): ?User
 {
-    foreach($users as $user) {
-        if($user->id === $id)  {
+    foreach ($users as $user) {
+        if ($user->id === $id) {
             return $user;
         }
     }
     return null;
 }
 
-function statusLabel(OrderStatus $status): string{
-    return match($status) {
-        OrderStatus::Pending => "Menunggu pembayaran",
-        OrderStatus::Paid => "Sudah dibayar",
-        OrderStatus::Shipped => "Dikirim",
-        OrderStatus::Cancelled => "Dibatalkan",
+function statusLabel(OrderStatus $status): string
+{
+    return match ($status) {
+        OrderStatus::Pending   => 'Menunggu pembayaran',
+        OrderStatus::Paid      => 'Sudah dibayar',
+        OrderStatus::Shipped   => 'Dikirim',
+        OrderStatus::Cancelled => 'Dibatalkan',
     };
 }
-
-
-?>
