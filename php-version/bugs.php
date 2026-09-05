@@ -4,36 +4,37 @@ require_once __DIR__ . '/domain.php';
 /** @return User[] */
 function seedUsers(): array
 {
-    return [new User('u1', 'ahmad.bayu.nurdiansyah11@gmail.com', new Profile('Bayu Nurdiansyah'))];
+    return [new User('u1', 'a@example.com', new Profile('Bayu Nurdiansyah'))];
 }
 
-// wrong properties
+// fix 1: property yang benar
 function bug1(User $user): string {
-    return $user->emailAddress;
-}
-
-// return value without nullcheck
-function bug2(): string {
-    $user = findUser(seedUsers(), 'u99');
     return $user->email;
 }
 
-// skip nullcheck
+// fix 2: null check sebelum akses property
+function bug2(): string {
+    $user = findUser(seedUsers(), 'u99');
+    return $user->email ?? 'not found';
+}
+
+// fix 3: null check berantai
 function bug3(User $user): int {
-    return strlen($user->profile->bio);
+    return strlen($user->profile->bio ?? '');
 }
 
-// invalid value
+// fix 4: pakai enum, bukan string bebas
 function bug4(): string {
-    return statusLabel('refunded');
+    return statusLabel(OrderStatus::Pending);
 }
 
-// bug 5 wrong placement
-function makeOrder(string $userId, string $productId): string {
-    return "$userId-$productId";
+// fix 5: value object bikin dua parameter jadi tipe beda
+function makeOrder(UserId $userId, ProductId $productId): string {
+    return "{$userId->value}-{$productId->value}";
 }
+
 function bug5(): string {
-    $userId = 'u1';
-    $productId = 'p1';
-    return makeOrder($productId, $userId);
+    $userId = new UserId('u1');
+    $productId = new ProductId('p1');
+    return makeOrder($userId, $productId);
 }
