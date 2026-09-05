@@ -4,7 +4,7 @@ require_once __DIR__ . '/domain.php';
 /** @return User[] */
 function seedUsers(): array
 {
-    return [new User('u1', 'ahmad.bayu.nurdiansyah11@gmail.com', new Profile('Bayu Nurdiansyah'))];
+    return [new User('u1', 'coba@gmail.com', new Profile('coba'))];
 }
 
 // wrong properties

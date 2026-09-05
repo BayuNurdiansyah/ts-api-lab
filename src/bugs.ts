@@ -1,7 +1,7 @@
 import { findUser, statusLabel, type User, type Order } from "./domain.js";
 
 const users: User[] = [
-    {id: "u1", email: "ahmad.bayu.nurdiansyah11@gmail.com", profile: {displayName: "Bayu Nurdiansyah", bio: "Bubur diaduk"}},
+    {id: "u1", email: "coba@gmail.com", profile: {displayName: "Coba", bio: "Bubur diaduk"}},
 ];
 
 // wrong properties
