@@ -4,35 +4,33 @@ const users: User[] = [
     {id: "u1", email: "coba@gmail.com", profile: {displayName: "Coba", bio: "Bubur diaduk"}},
 ];
 
-// wrong properties
 export function bug1(user: User): string {
-    return user.emailAddress;
-}
-
-// find user without check the undefined value
-export function bug2(): string {
-    const user = findUser(users, "u099");
     return user.email;
 }
 
-// skip optional chaining "?"
+export function bug2(): string {
+    const user = findUser(users, "u99");
+    return user?.email ?? "not found";
+  }
+  
 export function bug3(user: User): number {
-    return user.profile.bio.length;
+    return user.profile?.bio?.length ?? 0;
 }
 
-// wrong status value
 export function bug4(): string {
-    return statusLabel("refunded");
+    return statusLabel("paid");
 }
 
+type UserId = string & { readonly __brand: "UserId" };
+type ProductId = string & { readonly __brand: "ProductId" };
 
-export function makeOrder(userId: string, productId: string): string{
-    return `${userId}-${productId}`
+export function makeOrder(userId: UserId, productId: ProductId): string {
+    return `${userId}-${productId}`;
 }
 
-// bug 5 wrong place argument 
 export function bug5(): string {
-    const userId = "u1";
-    const productId = "p1";
-    return makeOrder(productId, userId);
+    const userId = "u1" as UserId;
+    const productId = "p1" as ProductId;
+    return makeOrder(userId, productId);
 }
+export const bad: number = "ini string";

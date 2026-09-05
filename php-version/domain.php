@@ -7,6 +7,16 @@ enum OrderStatus: string
     case Cancelled = 'cancelled';
 }
 
+final class UserId
+{
+    public function __construct(public readonly string $value) {}
+}
+
+final class ProductId
+{
+    public function __construct(public readonly string $value) {}
+}
+
 class Profile 
 {
     public function __construct(
