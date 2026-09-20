@@ -3,3 +3,4 @@ vendor/
 dist/
 *.tsbuildinfo
 .DS_Store
+lab.sqlite
