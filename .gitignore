@@ -4,3 +4,6 @@ dist/
 *.tsbuildinfo
 .DS_Store
 lab.sqlite
+app.log
+rebuild-v1.txt
+rebuild-v2.txt
