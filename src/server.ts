@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import * as schema from "./schema.js";
+import "dotenv/config";
 
 const sqlite = new Database(process.env.DB_PATH ?? "lab.sqlite");
 const db = drizzle(sqlite, { schema });
@@ -64,6 +65,65 @@ app.post("/users", async (req, reply) => {
 app.get("/boom", async (req) => {
   req.log.info({ step: "fetching user" }, "starting work");
   throw new Error("database connection lost");
+});
+
+app.get("/stream-demo", async (req, reply) => {
+  reply.raw.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+
+  const words = "This is a demo of streaming responses word by word instead of waiting for the full reply".split(" ");
+
+  for (const word of words) {
+    reply.raw.write(`data: ${JSON.stringify({ token: word + " " })}\n\n`);
+    await new Promise((r) => setTimeout(r, 120));
+  }
+
+  reply.raw.write("data: [DONE]\n\n");
+  reply.raw.end();
+});
+
+app.post("/chat", async (req, reply) => {
+  const body = req.body as { message?: string };
+  if (!body.message) {
+    return reply.code(400).send({ error: "message is required" });
+  }
+
+  reply.raw.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:streamGenerateContent?key=${process.env.GEMINI_API_KEY}&alt=sse`;
+
+  const upstream = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: body.message }] }],
+    }),
+  });
+
+  if (!upstream.ok || !upstream.body) {
+    const errText = await upstream.text();
+    reply.raw.write(`data: ${JSON.stringify({ error: errText })}\n\n`);
+    reply.raw.end();
+    return;
+  }
+
+  const reader = upstream.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    reply.raw.write(decoder.decode(value));
+  }
+
+  reply.raw.end();
 });
 
 const port = Number(process.env.PORT ?? 3000);
